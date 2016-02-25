@@ -1,22 +1,36 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <QWidget>
+#include <QLabel>
+#include <QPushButton>
+#include <QGridLayout>
+#include <qfilesystemmodel.h>
+#include <QTreeView>
+#include <QTreeWidgetItem>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    MainWindow();
+
+private slots:
+    void get_stat();
 
 private:
-    Ui::MainWindow *ui;
+    void createGUI();
+    QLabel *label;
+    QLabel *filecounter;
+    QPushButton *button;
+    QPushButton *exit_button;
+    QPushButton *choose_dir;
+    QGridLayout *layout;
+    QFileSystemModel *model;
+    QTreeView *tree;
+    QTreeWidgetItem *dir;
+    QItemSelectionModel *selectionModel;
 };
 
 #endif // MAINWINDOW_H
