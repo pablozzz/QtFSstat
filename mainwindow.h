@@ -17,10 +17,12 @@ public:
     MainWindow();
 
 private slots:
-    void get_stat();
+    void get_stat();                //Create new threat for getting statistics
 
 private:
-    void createGUI();
+    void createGUI();               //MainWindow GUI constructor
+    QString fileSize(qint64 nSize); //Get absolute path and return filesize in bytes,kilobytes,etc.
+
     QLabel *label;
     QLabel *filecounter;
     QPushButton *button;
