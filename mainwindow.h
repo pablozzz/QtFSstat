@@ -28,6 +28,7 @@ private:
         qint64 fileCounter;                 //all files in folder
         qint64 sizeCounter;                 //all files size
         QMap<QString,qint64> sizeStore;     // file groups with sizes
+        QMap<QString,qint64> countStore;    // file groups counter
     };
 
     void createGUI();                   //MainWindow GUI constructor
@@ -35,8 +36,6 @@ private:
     void getFilesStat(QDir dir_path, stat_info *folder_stat);   //Get full files statisic about folder dir_path
     void dirIterator(QDir dir_path);    //Subdirectories runner;
     void SubDirsCounter(QDir dir_path); //Count subdirectories in folder
-
-
 
     QLabel *label;
     QLabel *filecounter;

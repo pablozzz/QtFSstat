@@ -75,6 +75,13 @@ void MainWindow::dirIterator(QDir dir_path)
         qDebug() << "Filgroup: " <<iter.key() << "Size: " <<this->fileSize(iter.value());
 
     }
+    QMap<QString,qint64> ::iterator iter2 = folder_stat->countStore.begin();
+    for (;iter2 != folder_stat->countStore.end(); ++iter2)
+    {
+        qDebug() << "Filgroup: " <<iter2.key() << "Count: " << iter2.value();
+
+    }
+
 }
 
 void MainWindow::getFilesStat(QDir dir_path, stat_info* folder_stat)
@@ -91,10 +98,13 @@ void MainWindow::getFilesStat(QDir dir_path, stat_info* folder_stat)
         if (folder_stat->sizeStore.contains(ext))
         {
             folder_stat->sizeStore[ext] += nSize;
+            folder_stat->countStore[ext]++;
+
         }
         else
         {
             folder_stat->sizeStore.insert(ext, nSize);
+            folder_stat->countStore.insert(ext, 1);
         }
         folder_stat->sizeCounter += nSize;
         folder_stat->fileCounter++;
