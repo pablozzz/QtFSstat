@@ -67,22 +67,25 @@ void MainWindow::get_stat()
 }
 void MainWindow::printStat()
 {
-    QString info = "Subdirectories in selected folder: " ; //+ stat->SubDirsCounter();
-    StatDisplay->setText(stat->getsubdirsCounter());
+    QString info = "Subdirectories in selected folder: "+ stat->getsubdirsCounter(); //+ stat->SubDirsCounter();
+    StatDisplay->setText(info);
+    info = "Files in selected folder: " + QString::number(stat->getfileCounter());
+    StatDisplay->append(info);
+    info = "All files size in selected folder: " + stat->fileSize(stat->getsizeCounter());
+    StatDisplay->append(info);
+
 
     //print all extensions size
+    StatDisplay->append("Group | count | full_size | middle_size" );
     QMap<QString,qint64> ::iterator iter = stat->sizeStore.begin();
     for (;iter != stat->sizeStore.end(); ++iter)
     {
-        qDebug() << "Filgroup: " <<iter.key() << "Size: " <<stat->fileSize(iter.value());
-
-    }
-    //print all extensions count
-    QMap<QString,qint64> ::iterator iter2 = stat->countStore.begin();
-    for (;iter2 != stat->countStore.end(); ++iter2)
-    {
-        qDebug() << "Filgroup: " <<iter2.key() << "Count: " << iter2.value();
-
+        QString group = iter.key();
+        QString filesInGroup =  QString::number(stat->countStore[iter.key()]);
+        QString groupSize = stat->fileSize(iter.value());
+        QString middleSize = stat->fileSize(iter.value()/stat->countStore[iter.key()]);
+        info = group+" | "+filesInGroup+" | "+ groupSize+ " | "+ middleSize;
+        StatDisplay->append(info);
     }
 }
 

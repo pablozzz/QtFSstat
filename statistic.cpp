@@ -13,7 +13,7 @@ qint64 Statistic::getfileCounter()
 
 qint64 Statistic::getsizeCounter()
 {
-    return fileCounter;
+    return sizeCounter;
 }
 QString Statistic::getsubdirsCounter()
 {
@@ -63,9 +63,9 @@ void Statistic::SubDirsCounter(QDir dir_path)
     //Subdirectories counter
     foreach (QString DirName,dir_path.entryList(QDir::Dirs))
     {
-        subDirsCouter++;
-    }
-    subDirsCouter -=2; //For exclude "." and ".." subdirectories
+        if(DirName != "." && DirName != "..")subDirsCouter++; //For exclude "." and ".." subdirectories
+        qDebug() << DirName;
+    } 
 }
 
 QString Statistic::fileSize(qint64 nSize)
