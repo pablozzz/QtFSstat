@@ -13,8 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    newthread.cpp \
+    statistic.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    newthread.h \
+    statistic.h
 
-FORMS    +=
+

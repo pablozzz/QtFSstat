@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+
 MainWindow::MainWindow()
 {
     createGUI();
@@ -52,90 +53,11 @@ void MainWindow::get_stat()
     QDir dir_path = model->fileInfo(index).absoluteFilePath();
 
     //start it in new thread
-    this->SubDirsCounter(dir_path);
-    this->dirIterator(dir_path);
-}
-
-void MainWindow::dirIterator(QDir dir_path)
-{
-     //Files counter
-    stat_info *folder_stat = new stat_info;
-    folder_stat->fileCounter = 0;
-    folder_stat->sizeCounter = 0;
-    QDirIterator it(dir_path, QDirIterator::Subdirectories);
-
-    while (it.hasNext()) {
-        this->getFilesStat(it.next(), folder_stat);
-    }
-
-    //print all extensions size
-    QMap<QString,qint64> ::iterator iter = folder_stat->sizeStore.begin();
-    for (;iter != folder_stat->sizeStore.end(); ++iter)
-    {
-        qDebug() << "Filgroup: " <<iter.key() << "Size: " <<this->fileSize(iter.value());
-
-    }
-    QMap<QString,qint64> ::iterator iter2 = folder_stat->countStore.begin();
-    for (;iter2 != folder_stat->countStore.end(); ++iter2)
-    {
-        qDebug() << "Filgroup: " <<iter2.key() << "Count: " << iter2.value();
-
-    }
+    Statistic *stat = new Statistic();
+    stat->SubDirsCounter(dir_path);
+    stat->dirIterator(dir_path);
 
 }
 
-void MainWindow::getFilesStat(QDir dir_path, stat_info* folder_stat)
-{
 
-    foreach (QString fileName,dir_path.entryList(QDir::Files))
-    {
-        QString full_path = dir_path.absoluteFilePath(fileName);
-        QFileInfo *fileinfo= new QFileInfo(full_path);
-        qint64 nSize = fileinfo->size();
 
-        //add new extinsions and it's sizes in dictionary
-        QString ext = fileinfo->completeSuffix();
-        if (folder_stat->sizeStore.contains(ext))
-        {
-            folder_stat->sizeStore[ext] += nSize;
-            folder_stat->countStore[ext]++;
-
-        }
-        else
-        {
-            folder_stat->sizeStore.insert(ext, nSize);
-            folder_stat->countStore.insert(ext, 1);
-        }
-        folder_stat->sizeCounter += nSize;
-        folder_stat->fileCounter++;
-
-    }
-
-}
-
-void MainWindow::SubDirsCounter(QDir dir_path)
-{
-    //Subdirectories counter
-    int subdir_counter = 0;
-    foreach (QString DirName,dir_path.entryList(QDir::Dirs))
-    {
-        subdir_counter++;
-    }
-    subdir_counter -=2; //For exclude "." and ".." subdirectories
-    qDebug() << "Subdirectories: " << subdir_counter;
-}
-
-QString MainWindow::fileSize(qint64 nSize)
-{
-    int i = 0;
-    for (;nSize > 1023; nSize/=1024, i++)
-    {
-        if(i >= 4)
-        {
-            break;
-        }
-
-    }
-    return QString().setNum(nSize)+"BKMGT"[i];
-
-}
