@@ -10,6 +10,8 @@
 #include <QTreeWidgetItem>
 #include <QDebug>
 #include <QProgressBar>
+#include <QTextEdit>
+
 #include "statistic.h"
 
 class MainWindow : public QWidget
@@ -25,6 +27,7 @@ private slots:
 private:
 
     void createGUI();                   //MainWindow GUI constructor
+    void printStat();
 
     QLabel *label;
     QLabel *filecounter;
@@ -32,12 +35,14 @@ private:
     QPushButton *button;
     QPushButton *exit_button;
     QPushButton *choose_dir;
+    QTextEdit *StatDisplay;
     QGridLayout *layout;
     QFileSystemModel *model;
     QTreeView *tree;
     QTreeWidgetItem *dir;
     QItemSelectionModel *selectionModel;
     QProgressBar *progressBar;
+    Statistic *stat;
 };
 
 #endif // MAINWINDOW_H

@@ -4,6 +4,7 @@ Statistic::Statistic()
 {
     fileCounter = 0;
     sizeCounter = 0;
+    subDirsCouter = 0;
 }
 qint64 Statistic::getfileCounter()
 {
@@ -14,6 +15,12 @@ qint64 Statistic::getsizeCounter()
 {
     return fileCounter;
 }
+QString Statistic::getsubdirsCounter()
+{
+
+    return QString::number(subDirsCouter);
+}
+
 
 void Statistic::dirIterator(QDir dir_path)
 {
@@ -23,22 +30,6 @@ void Statistic::dirIterator(QDir dir_path)
     while (it.hasNext()) {
         this->getFilesStat(it.next());
     }
-
-    //print all extensions size
-    QMap<QString,qint64> ::iterator iter = sizeStore.begin();
-    for (;iter != sizeStore.end(); ++iter)
-    {
-        qDebug() << "Filgroup: " <<iter.key() << "Size: " <<this->fileSize(iter.value());
-
-    }
-    //print all extensions count
-    QMap<QString,qint64> ::iterator iter2 = countStore.begin();
-    for (;iter2 != countStore.end(); ++iter2)
-    {
-        qDebug() << "Filgroup: " <<iter2.key() << "Count: " << iter2.value();
-
-    }
-
 }
 void Statistic::getFilesStat(QDir dir_path)
 {
@@ -70,13 +61,11 @@ void Statistic::getFilesStat(QDir dir_path)
 void Statistic::SubDirsCounter(QDir dir_path)
 {
     //Subdirectories counter
-    int subdir_counter = 0;
     foreach (QString DirName,dir_path.entryList(QDir::Dirs))
     {
-        subdir_counter++;
+        subDirsCouter++;
     }
-    subdir_counter -=2; //For exclude "." and ".." subdirectories
-    qDebug() << "Subdirectories: " << subdir_counter;
+    subDirsCouter -=2; //For exclude "." and ".." subdirectories
 }
 
 QString Statistic::fileSize(qint64 nSize)

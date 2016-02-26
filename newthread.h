@@ -7,7 +7,7 @@ class newThread : public QThread
     Q_OBJECT
 
 public:
-    newThread();
+
     void run();
 
 signals:
