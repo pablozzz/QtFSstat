@@ -1,10 +1,12 @@
 #include "statistic.h"
 
-Statistic::Statistic()
+Statistic::Statistic(QDir dirpath)
 {
     fileCounter = 0;
     sizeCounter = 0;
     subDirsCouter = 0;
+    dir_path = dirpath;
+
 }
 qint64 Statistic::getfileCounter()
 {
@@ -21,22 +23,31 @@ QString Statistic::getsubdirsCounter()
     return QString::number(subDirsCouter);
 }
 
-
-void Statistic::dirIterator(QDir dir_path)
+QString Statistic::getPath()
 {
-    //Files counter
-    QDirIterator it(dir_path, QDirIterator::Subdirectories);
+    return dir_path.path();
+}
 
+void Statistic::dirIterator()
+{
+    this->getFolderStat(dir_path);      //get statistic information from cuttent folder
+                                        //and start iterator
+    QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot; //filter for "." and ".." dirs
+    QDirIterator it(dir_path.path(), df, QDirIterator::NoIteratorFlags);
     while (it.hasNext()) {
-        this->getFilesStat(it.next());
+        {
+            subDirsCouter++;
+            this->getFolderStat(it.next());
+        }
     }
 }
-void Statistic::getFilesStat(QDir dir_path)
+void Statistic::getFolderStat(QDir current_path)
 {
+    qDebug() <<current_path;
 
-    foreach (QString fileName,dir_path.entryList(QDir::Files))
+    foreach (QString fileName,current_path.entryList(QDir::Files))
     {
-        QString full_path = dir_path.absoluteFilePath(fileName);
+        QString full_path = current_path.absoluteFilePath(fileName);
         QFileInfo *fileinfo= new QFileInfo(full_path);
         qint64 nSize = fileinfo->size();
 
@@ -58,15 +69,7 @@ void Statistic::getFilesStat(QDir dir_path)
     }
 
 }
-void Statistic::SubDirsCounter(QDir dir_path)
-{
-    //Subdirectories counter
-    foreach (QString DirName,dir_path.entryList(QDir::Dirs))
-    {
-        if(DirName != "." && DirName != "..")subDirsCouter++; //For exclude "." and ".." subdirectories
-        qDebug() << DirName;
-    } 
-}
+
 
 QString Statistic::fileSize(qint64 nSize)
 {

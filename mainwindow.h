@@ -11,7 +11,8 @@
 #include <QDebug>
 #include <QProgressBar>
 #include <QTextEdit>
-
+#include <QTableView>
+#include <QStandardItemModel>
 #include "statistic.h"
 
 class MainWindow : public QWidget
@@ -30,17 +31,21 @@ private:
     void printStat();
 
     QLabel *label;
-    QLabel *filecounter;
+    QLabel *statlabel;
     QLabel *PBlabel;
     QPushButton *button;
     QPushButton *exit_button;
     QPushButton *choose_dir;
     QTextEdit *StatDisplay;
-    QGridLayout *layout;
+    QHBoxLayout *mainlayout;
+    QVBoxLayout *leftlayout;
+    QVBoxLayout *rightlayout;
     QFileSystemModel *model;
     QTreeView *tree;
     QTreeWidgetItem *dir;
     QItemSelectionModel *selectionModel;
+    QTableView *table;
+    QStandardItemModel *tablemodel;
     QProgressBar *progressBar;
     Statistic *stat;
 };
