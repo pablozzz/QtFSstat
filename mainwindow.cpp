@@ -55,6 +55,7 @@ void MainWindow::createGUI()
     progressBar = new QProgressBar();
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
+    progressBar->setValue(0);
     leftlayout->addWidget(progressBar,3,0);
 
     exit_button = new QPushButton ("Exit");
@@ -70,6 +71,11 @@ void MainWindow::get_stat()
 {
     const QModelIndex index = tree->selectionModel()->currentIndex();
     QDir dir_path = model->fileInfo(index).absoluteFilePath();
+
+    //create and start timer for progress bar
+    timer = new QTimer;
+    connect(timer, SIGNAL(timeout()), this, SLOT(TimerEvent()));
+    timer->start(1000);
 
     //start it in new thread
     this->buildStat(dir_path);
@@ -87,6 +93,7 @@ void MainWindow::addThread(QDir dirPath)
     connect(wrapper,SIGNAL(done()), thread, SLOT(quit()));
     connect(wrapper,SIGNAL(done()),this,SLOT(printStat()));
     connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
+    connect(wrapper,SIGNAL(timerValue(int)),progressBar,SLOT(setValue(int)));
 
     thread->start();
 
@@ -147,3 +154,9 @@ void MainWindow::printStat()
     }
 }
 
+void MainWindow::TimerEvent()
+{
+    int cur_pb_value = progressBar->value();
+    if (cur_pb_value < 99)
+        progressBar->setValue(cur_pb_value+1);
+}

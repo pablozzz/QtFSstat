@@ -20,9 +20,11 @@ public:
     qint64 getfileCounter();
     qint64 getsizeCounter();
     QString getsubdirsCounter();
+    QString getPath();
+
     QMap<QString,qint64> sizeStore;     // file groups with sizes
     QMap<QString,qint64> countStore;    // file groups counter
-    QString getPath();
+
 
 private:
 

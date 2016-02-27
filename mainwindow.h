@@ -16,6 +16,7 @@
 #include "statistic.h"
 #include <QThread>
 #include "newthread.h"
+#include <QTimer>
 
 class MainWindow : public QWidget
 {
@@ -28,11 +29,10 @@ public:
 private slots:
     void get_stat();                //Create new threat for getting statistics
     void printStat();
-
+    void TimerEvent();
 private:
 
     void createGUI();                   //MainWindow GUI constructor
-
     void addThread(QDir dirPath);
 
     QLabel *label;
@@ -53,6 +53,7 @@ private:
     QStandardItemModel *tablemodel;
     QProgressBar *progressBar;
     newThread *wrapper;
+    QTimer *timer;
 
 };
 
