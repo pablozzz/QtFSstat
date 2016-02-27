@@ -8,20 +8,13 @@ class newThread : public QObject
 
 private:
 
-    Statistic *stat;
     QDir dir_path;
 
 public:
     newThread(QDir dirPath);
     ~newThread();
 
-    QString getPath();
-
-    QMap<QString,qint64> sizeStore;     // file groups with sizes
-    QMap<QString,qint64> countStore;    // file groups counter
-    qint64 fileCounter;                 //all files in folder
-    qint64 sizeCounter;                 //all files size
-    QString subDirsCouter;               //subDirs
+    Statistic *stat;
 
 private slots:
 

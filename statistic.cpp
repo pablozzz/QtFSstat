@@ -28,20 +28,25 @@ QString Statistic::getPath()
     return dir_path.path();
 }
 
+
 void Statistic::dirIterator()
 {
-    this->getFolderStat(dir_path);      //get statistic information from cuttent folder
-                                       //and start iterator
+    //count subdirs in current directory
+    foreach (QString DirName,dir_path.entryList(QDir::Dirs))
+    {
+        if(DirName != "." && DirName != "..")subDirsCouter++; //For exclude "." and ".." subdirectories
+    }
+
+    //get statistic information from cuttent folder and start iterator
+    this->getFolderStat(dir_path);
     QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot|QDir::NoSymLinks; //filter for "." and ".." dirs
     QDirIterator it(dir_path.path(), df, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         {
-            subDirsCouter++;
             this->getFolderStat(it.next());
         }
     }
 }
-
 
 void Statistic::getFolderStat(QDir current_path)
 {
