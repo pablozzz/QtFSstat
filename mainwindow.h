@@ -14,6 +14,8 @@
 #include <QTableView>
 #include <QStandardItemModel>
 #include "statistic.h"
+#include <QThread>
+#include "newthread.h"
 
 class MainWindow : public QWidget
 {
@@ -21,14 +23,17 @@ class MainWindow : public QWidget
 
 public:
     MainWindow();
+    void buildStat(QDir dirPath);
 
 private slots:
     void get_stat();                //Create new threat for getting statistics
+    void printStat();
 
 private:
 
     void createGUI();                   //MainWindow GUI constructor
-    void printStat();
+
+    void addThread(QDir dirPath);
 
     QLabel *label;
     QLabel *statlabel;
@@ -47,7 +52,8 @@ private:
     QTableView *table;
     QStandardItemModel *tablemodel;
     QProgressBar *progressBar;
-    Statistic *stat;
+    newThread *wrapper;
+
 };
 
 #endif // MAINWINDOW_H

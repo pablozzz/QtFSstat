@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "newthread.h"
+
 
 MainWindow::MainWindow()
 {
@@ -63,10 +63,6 @@ void MainWindow::createGUI()
     connect(exit_button,SIGNAL(clicked(bool)),this,SLOT(close()));
     rightlayout->addWidget(exit_button);
 
-    newThread thread;
-    connect(&thread,SIGNAL(progress(int)),progressBar, SLOT(setValue(int)));
-    //thread.start();
-
     mainlayout->addLayout(leftlayout);
     mainlayout->addLayout(rightlayout);
 }
@@ -76,12 +72,37 @@ void MainWindow::get_stat()
 {
     const QModelIndex index = tree->selectionModel()->currentIndex();
     QDir dir_path = model->fileInfo(index).absoluteFilePath();
-
+    qDebug() << dir_path;
     //start it in new thread
-    stat = new Statistic(dir_path);
-    stat->dirIterator();
-    this->printStat();
+
+    this->buildStat(dir_path);
+
 }
+
+void MainWindow::addThread(QDir dirPath)
+{
+    wrapper = new newThread(dirPath);
+    QThread* thread = new QThread;
+
+    wrapper->moveToThread(thread);
+
+    connect(thread,SIGNAL(started()),wrapper,SLOT(process()));
+    connect(wrapper,SIGNAL(done()), thread, SLOT(quit()));
+    connect(wrapper,SIGNAL(done()),this,SLOT(printStat()));
+    connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
+
+    thread->start();
+
+    return;
+
+}
+
+void MainWindow::buildStat(QDir dirPath)
+{
+    this->addThread(dirPath);
+}
+
+
 void MainWindow::printStat()
 {
     //clere table and construct header
@@ -91,26 +112,26 @@ void MainWindow::printStat()
     tablemodel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
     tablemodel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
 
-    StatDisplay->setText(stat->getPath());
-    QString info = "Subdirectories in selected folder: "+ stat->getsubdirsCounter(); //+ stat->SubDirsCounter();
+    StatDisplay->setText(wrapper->getPath());
+    QString info = "Subdirectories in selected folder: "+ wrapper->subDirsCouter;
     StatDisplay->append(info);
-    info = "Files in selected folder: " + QString::number(stat->getfileCounter());
+    info = "Files in selected folder: " + QString::number(wrapper->fileCounter);
     StatDisplay->append(info);
-    info = "All files size in selected folder: " + stat->fileSize(stat->getsizeCounter());
+    info = "All files size in selected folder: " + QString::number(wrapper->sizeCounter);
     StatDisplay->append(info);
 
 
     //print all extensions size
 
-    QMap<QString,qint64> ::iterator iter = stat->sizeStore.begin();
+    QMap<QString,qint64> ::iterator iter = wrapper->sizeStore.begin();
     int row = 0;
-    for (;iter != stat->sizeStore.end(); ++iter)
+    for (;iter != wrapper->sizeStore.end(); ++iter)
     {
 
         QString group = iter.key();
-        QString filesInGroup =  QString::number(stat->countStore[iter.key()]);
-        QString groupSize = stat->fileSize(iter.value());
-        QString avgSize = stat->fileSize(iter.value()/stat->countStore[iter.key()]);
+        QString filesInGroup =  QString::number(wrapper->countStore[iter.key()]);
+        QString groupSize = QString::number(iter.value());
+        QString avgSize = QString::number(iter.value()/wrapper->countStore[iter.key()]);
 
         tablemodel->appendRow(new QStandardItem());  //add new string in table
 
@@ -126,10 +147,7 @@ void MainWindow::printStat()
 
         QStandardItem *avg_size = new QStandardItem(avgSize);
         tablemodel->setItem(row,3,avg_size);
-
         row++;
     }
 }
-
-
 

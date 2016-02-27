@@ -31,9 +31,9 @@ QString Statistic::getPath()
 void Statistic::dirIterator()
 {
     this->getFolderStat(dir_path);      //get statistic information from cuttent folder
-                                        //and start iterator
-    QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot; //filter for "." and ".." dirs
-    QDirIterator it(dir_path.path(), df, QDirIterator::NoIteratorFlags);
+                                       //and start iterator
+    QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot|QDir::NoSymLinks; //filter for "." and ".." dirs
+    QDirIterator it(dir_path.path(), df, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         {
             subDirsCouter++;
@@ -41,16 +41,17 @@ void Statistic::dirIterator()
         }
     }
 }
+
+
 void Statistic::getFolderStat(QDir current_path)
 {
-    qDebug() <<current_path;
-
     foreach (QString fileName,current_path.entryList(QDir::Files))
     {
         QString full_path = current_path.absoluteFilePath(fileName);
         QFileInfo *fileinfo= new QFileInfo(full_path);
         qint64 nSize = fileinfo->size();
-
+        sizeCounter += nSize;
+        fileCounter++;
         //add new extinsions and it's sizes in dictionary
         QString ext = fileinfo->completeSuffix();
         if (sizeStore.contains(ext))
@@ -64,8 +65,7 @@ void Statistic::getFolderStat(QDir current_path)
             sizeStore.insert(ext, nSize);
             countStore.insert(ext, 1);
         }
-        sizeCounter += nSize;
-        fileCounter++;
+
     }
 
 }
