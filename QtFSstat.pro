@@ -22,3 +22,5 @@ HEADERS  += mainwindow.h \
     statistic.h
 
 
+QMAKE_LFLAGS += -s
+

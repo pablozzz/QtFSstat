@@ -42,8 +42,14 @@ void MainWindow::createGUI()
     StatDisplay = new QTextEdit;
     rightlayout->addWidget(StatDisplay);
 
+    //create table and table header
     table = new QTableView;
-    tablemodel = new QStandardItemModel(0,3,this);
+    tablemodel = new QStandardItemModel(0,4,this);
+    tablemodel->setHorizontalHeaderItem(0, new QStandardItem(QString("group")));
+    tablemodel->setHorizontalHeaderItem(1, new QStandardItem(QString("count")));
+    tablemodel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
+    tablemodel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
+
     table->setModel(tablemodel);
     rightlayout->addWidget(table);
 
