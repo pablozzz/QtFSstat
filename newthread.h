@@ -1,7 +1,8 @@
+//Special "wrappper" class for create object, which have to work in new thread & create new thread for it.
+
 #ifndef NEWTHREAD_H
 #define NEWTHREAD_H
 #include <statistic.h>
-#include <qtimer.h>
 
 class newThread : public QObject
 {
@@ -19,7 +20,7 @@ public:
     Statistic *stat;
 
 private slots:
-    void process();
+    void process();      //create statistic object and start calculate
     void progressDone(); //full progress bar;
 
 signals:

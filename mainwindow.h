@@ -13,7 +13,6 @@
 #include <QTextEdit>
 #include <QTableView>
 #include <QStandardItemModel>
-#include "statistic.h"
 #include <QThread>
 #include "newthread.h"
 #include <QTimer>

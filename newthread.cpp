@@ -5,7 +5,7 @@ newThread::newThread(QDir dirPath)
 {
     dir_path = dirPath;
     progress_value = 0;
-    connect(this,SIGNAL(done()),this,SLOT(progressDone()));
+    connect(this,SIGNAL(done()),this,SLOT(progressDone()));  //send 100% value in progress bar on main window
 }
 newThread::~newThread()
 {

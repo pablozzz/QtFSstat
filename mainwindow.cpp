@@ -121,7 +121,7 @@ void MainWindow::printStat()
     StatDisplay->append(info);
     info = "Files in selected folder: " + QString::number(wrapper->stat->getfileCounter());
     StatDisplay->append(info);
-    info = "All files size in selected folder: " + QString::number(wrapper->stat->getsizeCounter());
+    info = "All files size in selected folder: " + wrapper->stat->fileSize(wrapper->stat->getsizeCounter());
     StatDisplay->append(info);
 
     //print all extensions size
@@ -133,8 +133,8 @@ void MainWindow::printStat()
 
         QString group = iter.key();
         QString filesInGroup =  QString::number(wrapper->stat->countStore[iter.key()]);
-        QString groupSize = QString::number(iter.value());
-        QString avgSize = QString::number(iter.value()/wrapper->stat->countStore[iter.key()]);
+        QString groupSize = wrapper->stat->fileSize(iter.value());
+        QString avgSize =wrapper->stat->fileSize(iter.value()/wrapper->stat->countStore[iter.key()]);
 
         tablemodel->appendRow(new QStandardItem());  //add new string in table
 

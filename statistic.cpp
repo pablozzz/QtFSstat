@@ -32,34 +32,33 @@ QString Statistic::getPath()
 void Statistic::dirIterator()
 {
     //count subdirs in current directory
-    foreach (QString DirName,dir_path.entryList(QDir::Dirs))
-    {
-        if(DirName != "." && DirName != "..")subDirsCouter++; //For exclude "." and ".." subdirectories
+    foreach (QString DirName,dir_path.entryList(QDir::Dirs|QDir::NoDotAndDotDot)) //For exclude "." and ".." subdirectories
+    { 
+        subDirsCouter++;
     }
 
     //get statistic information from cuttent folder and start iterator
-    this->getFolderStat(dir_path);
+    this->fileFinder(dir_path);
     QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot|QDir::NoSymLinks; //filter for "." and ".." dirs
     QDirIterator it(dir_path.path(), df, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         {
-            this->getFolderStat(it.next());
+            this->fileFinder(it.next());
         }
     }
 }
 
-void Statistic::getFolderStat(QDir current_path)
+void Statistic::fileFinder(QDir current_dir)
 {
-    foreach (QString fileName,current_path.entryList(QDir::Files))
+    foreach (QFileInfo fileInfo,current_dir.entryInfoList(QDir::Files|QDir::Hidden|QDir::NoSymLinks))
     {
-        QString full_path = current_path.absoluteFilePath(fileName);
-        QFileInfo *fileinfo= new QFileInfo(full_path);
-        qint64 nSize = fileinfo->size();
+        qint64 nSize = fileInfo.size();
         sizeCounter += nSize;
         fileCounter++;
+
         //add new extinsions and it's sizes in dictionary
-        QString ext = fileinfo->completeSuffix();
-        if (sizeStore.contains(ext))
+        QString ext = fileInfo.completeSuffix();
+        if (sizeStore.contains(ext))             //Only one Qmap obj slowly search
         {
             sizeStore[ext] += nSize;
             countStore[ext]++;
@@ -70,9 +69,7 @@ void Statistic::getFolderStat(QDir current_path)
             sizeStore.insert(ext, nSize);
             countStore.insert(ext, 1);
         }
-
     }
-
 }
 
 
