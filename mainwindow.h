@@ -24,23 +24,22 @@ class MainWindow : public QWidget
 
 public:
     MainWindow();
-    void buildStat(QDir dirPath);
+    void computeStat(QDir dirPath); //start statistic calculation in new thread
 
 private slots:
     void getStat();                //Create new threat for getting statistics
-    void printStat();
+    void printStat();              //Display folder statistic when calculation is completed
     void timerEvent();
+
 private:
-
     void createGUI();                   //MainWindow GUI constructor
-    void addThread(QDir dirPath);
+    void addThread(QDir dirPath);       //Iinitialize new thread parametrs
 
-    QLabel *label;
-    QLabel *statlabel;
+    QLabel *treeWndLabel;
+    QLabel *statLabel;
     QLabel *pogressBarLabel;
-    QPushButton *button;
     QPushButton *exitButton;
-    QPushButton *chooseDir;
+    QPushButton *selectDirButton;
     QTextEdit *statDisplay;
     QHBoxLayout *mainLayout;
     QVBoxLayout *leftLayout;

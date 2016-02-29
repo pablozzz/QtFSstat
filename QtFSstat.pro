@@ -13,14 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    statistic.cpp \
-    wrapper.cpp
+           mainwindow.cpp \
+           statistic.cpp \
+           wrapper.cpp
 
-HEADERS  += mainwindow.h \
-    statistic.h \
-    wrapper.h
+HEADERS += mainwindow.h \
+           statistic.h \
+           wrapper.h
 
 
 QMAKE_LFLAGS += -s
-
+QMAKE_LFLAGS_RELEASE += -static-libgcc

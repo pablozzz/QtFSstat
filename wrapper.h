@@ -2,6 +2,7 @@
 
 #ifndef WRAPPER_H
 #define WRAPPER_H
+
 #include <statistic.h>
 
 class Wrapper : public QObject
@@ -9,14 +10,14 @@ class Wrapper : public QObject
     Q_OBJECT
 
 public:
-    Wrapper(QDir dirPath);
+    Wrapper(QDir dirPath_);
     ~Wrapper();
 
     Statistic *statistic;
 
 private:
-    QDir dir_path;
-    int progress_value;
+    QDir dirPath_;
+    int pBarValue_;
 
 signals:
     void done();

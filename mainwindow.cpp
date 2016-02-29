@@ -17,10 +17,10 @@ void MainWindow::createGUI()
     rightLayout = new QVBoxLayout;
 
     //create lables
-    label = new QLabel("Please choose directory:");
-    leftLayout->addWidget(label);
-    statlabel = new QLabel("Statistic information");
-    rightLayout->addWidget(statlabel);
+    treeWndLabel = new QLabel("Please choose directory:");
+    leftLayout->addWidget(treeWndLabel);
+    statLabel = new QLabel("Statistic information");
+    rightLayout->addWidget(statLabel);
 
     //create tree view for directory tree
     model = new QFileSystemModel;
@@ -29,7 +29,7 @@ void MainWindow::createGUI()
     tree->setModel(model);
     tree->hideColumn(1);           //hidden size "column"
     tree->setColumnWidth(0,200);   //size for "folder tree" column
-    tree->setColumnWidth(2,50);    //size for "type" column
+    tree->setColumnWidth(2,70);    //size for "type" column
     leftLayout->addWidget(tree);
 
     selectionModel= tree->selectionModel();
@@ -76,15 +76,25 @@ void MainWindow::createGUI()
 void MainWindow::getStat()
 {
     const QModelIndex index = tree->selectionModel()->currentIndex();
-    QDir dirPath = model->fileInfo(index).absoluteFilePath();
+    QDir dirPath  = model->fileInfo(index).absoluteFilePath();
 
-    //create and start timer for progress bar
-    timer = new QTimer;
-    connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
-    timer->start(1000);
+    //check selected path
+    QFileInfo *selectedPath = new QFileInfo(dirPath.path());
+    if (selectedPath->isDir())
+    {
+        //create and start timer for progress bar
+        timer = new QTimer;
+        connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
+        timer->start(1000);
 
-    //start it in new thread
-    this->buildStat(dirPath);
+        //start it in new thread
+        this->computeStat(dirPath);
+    }
+    else
+    {
+        statDisplay->clear();
+        statDisplay->append("Sorry, it's not a directory");
+    }
 
 }
 
@@ -107,7 +117,7 @@ void MainWindow::addThread(QDir dirPath)
 
 }
 
-void MainWindow::buildStat(QDir dirPath)
+void MainWindow::computeStat(QDir dirPath)
 {
     this->addThread(dirPath);
 }
@@ -122,15 +132,20 @@ void MainWindow::printStat()
     tableModel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
     tableModel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
 
-    statDisplay->setText(wrapper->statistic->getPath());
-    QString info = "Subdirectories in selected folder: "+ wrapper->statistic->getSubDirsCounter();
-    statDisplay->append(info);
-    info = "Files in selected folder: " + QString::number(wrapper->statistic->getFileCounter());
-    statDisplay->append(info);
-    info = "All files size in selected folder: " + wrapper->statistic->getFileSize(wrapper->statistic->getSizeCounter());
+    statDisplay->setText(wrapper->statistic->getPath()); //show selected folder path
+
+    QString info = "Subdirectories in selected folder: "
+            + wrapper->statistic->getSubDirsCounter();
+
+    info += "\nFiles in selected folder: "
+            + QString::number(wrapper->statistic->getFileCounter());
+
+    info += "\nAll files size in selected folder: "
+            + wrapper->statistic->getFileSize(wrapper->statistic->getSizeCounter());
+
     statDisplay->append(info);
 
-    //print all extensions size
+    //print all extensions count and size
 
     QMap<QString,qint64> ::iterator iter = wrapper->statistic->sizeStore_.begin();
     int row = 0;
@@ -140,7 +155,9 @@ void MainWindow::printStat()
         QString group = iter.key();
         QString filesInGroup =  QString::number(wrapper->statistic->countStore_[iter.key()]);
         QString groupSize = wrapper->statistic->getFileSize(iter.value());
-        QString avgSize =wrapper->statistic->getFileSize(iter.value()/wrapper->statistic->countStore_[iter.key()]);
+
+        QString avgSize = wrapper->statistic->getFileSize(iter.value()
+                                                          /wrapper->statistic->countStore_[iter.key()]);
 
         tableModel->appendRow(new QStandardItem());  //add new string in table
 
@@ -161,7 +178,7 @@ void MainWindow::printStat()
 
 void MainWindow::timerEvent()
 {
-    int curProgressBarvalue = progressBar->value();
-    if (curProgressBarvalue < 99)
-        progressBar->setValue(curProgressBarvalue+1);
+    int curPbval = progressBar->value();
+    if (curPbval < 99)
+        progressBar->setValue(curPbval+1);
 }

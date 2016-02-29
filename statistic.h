@@ -12,8 +12,8 @@ class Statistic
 public:
     Statistic(QDir dirPath);
 
-    void dirIterator();                 //Subdirectories runner;
-    void fileFinder(QDir currentDir);  //calculated statistic information in current folder
+    void startDirIterator();                 //Subdirectories runner;
+    void computeFdrStat(QDir currentDir);  //calculated statistic information in current folder
 
     qint64 getFileCounter();            //return all files count
     qint64 getSizeCounter();            //reutrn size of all files

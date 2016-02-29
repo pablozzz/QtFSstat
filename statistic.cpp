@@ -29,7 +29,7 @@ QString Statistic::getPath()
 }
 
 
-void Statistic::dirIterator()
+void Statistic::startDirIterator()
 {
     //count subdirs in current directory
     foreach (QString DirName,dirPath_.entryList(QDir::Dirs|QDir::NoDotAndDotDot)) //For exclude "." and ".." subdirectories
@@ -38,17 +38,17 @@ void Statistic::dirIterator()
     }
 
     //get statistic information from cuttent folder and start iterator
-    this->fileFinder(dirPath_);
+    this->computeFdrStat(dirPath_);
     QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot|QDir::NoSymLinks; //filter for "." and ".." dirs
     QDirIterator it(dirPath_.path(), df, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         {
-            this->fileFinder(it.next());
+            this->computeFdrStat(it.next());
         }
     }
 }
 
-void Statistic::fileFinder(QDir currentDiir)
+void Statistic::computeFdrStat(QDir currentDiir)
 {
     foreach (QFileInfo fileInfo,currentDiir.entryInfoList(QDir::Files|QDir::Hidden|QDir::NoSymLinks))
     {
