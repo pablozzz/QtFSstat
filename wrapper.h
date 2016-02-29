@@ -19,6 +19,7 @@ private:
     QDir dirPath_;
     int pBarValue_;
 
+
 signals:
     void done();
     void timerValue(int);

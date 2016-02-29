@@ -147,17 +147,22 @@ void MainWindow::printStat()
 
     //print all extensions count and size
 
-    QMap<QString,qint64> ::iterator iter = wrapper->statistic->sizeStore_.begin();
+    //load QMap elements in local variable
+    QMap<QString,qint64> countStore = wrapper->statistic->getCountStore();
+    QMap<QString,qint64> sizeStore  = wrapper->statistic->getSizeStore();
+
+    QMap<QString,qint64> ::iterator iter = sizeStore.begin();
     int row = 0;
-    for (;iter != wrapper->statistic->sizeStore_.end(); ++iter)
+    for (;iter != sizeStore.end(); ++iter)
     {
 
         QString group = iter.key();
-        QString filesInGroup =  QString::number(wrapper->statistic->countStore_[iter.key()]);
+
+        QString filesInGroup =  QString::number(countStore[iter.key()]);
         QString groupSize = wrapper->statistic->getFileSize(iter.value());
 
-        QString avgSize = wrapper->statistic->getFileSize(iter.value()
-                                                          /wrapper->statistic->countStore_[iter.key()]);
+        qint64 avgSizeBytes = iter.value()/countStore[iter.key()];
+        QString avgSize = wrapper->statistic->getFileSize(avgSizeBytes);
 
         tableModel->appendRow(new QStandardItem());  //add new string in table
 

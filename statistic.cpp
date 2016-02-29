@@ -28,6 +28,15 @@ QString Statistic::getPath()
     return dirPath_.path();
 }
 
+QMap<QString,qint64> Statistic::getCountStore()
+{
+    return countStore_;
+}
+
+QMap<QString,qint64> Statistic::getSizeStore()
+{
+    return sizeStore_;
+}
 
 void Statistic::startDirIterator()
 {

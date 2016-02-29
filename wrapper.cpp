@@ -27,4 +27,3 @@ void Wrapper::progressDone()
     emit timerValue(pBarValue_);
 }
 
-

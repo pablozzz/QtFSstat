@@ -20,12 +20,14 @@ public:
     QString getSubDirsCounter();        //return count of subdirectories only in selected folder
     QString getPath();                  //return selected folder path
     QString getFileSize(qint64 nSize);     //Get absolute path and return filesize in bytes,kilobytes,etc.
+    QMap<QString,qint64> getCountStore();
+    QMap<QString,qint64> getSizeStore();
 
-    QMap<QString,qint64> sizeStore_;     // file groups with sizes
-    QMap<QString,qint64> countStore_;    // file groups counter
 
 
 private:
+    QMap<QString,qint64> countStore_;    // file groups counter
+    QMap<QString,qint64> sizeStore_;     // file groups with sizes
     qint64 fileCounter_;                 //all files in folder
     qint64 sizeCounter_;                 //all files size
     qint64 subDirsCouter_;
