@@ -4,7 +4,7 @@
 MainWindow::MainWindow()
 {
     createGUI();
-    setLayout(mainlayout);
+    setLayout(mainLayout);
     setWindowTitle("File System Statistics");
 }
 
@@ -12,15 +12,15 @@ MainWindow::MainWindow()
 void MainWindow::createGUI()
 {
     //create layouts
-    mainlayout = new QHBoxLayout;
-    leftlayout = new QVBoxLayout;
-    rightlayout = new QVBoxLayout;
+    mainLayout = new QHBoxLayout;
+    leftLayout = new QVBoxLayout;
+    rightLayout = new QVBoxLayout;
 
     //create lables
     label = new QLabel("Please choose directory:");
-    leftlayout->addWidget(label);
+    leftLayout->addWidget(label);
     statlabel = new QLabel("Statistic information");
-    rightlayout->addWidget(statlabel);
+    rightLayout->addWidget(statlabel);
 
     //create tree view for directory tree
     model = new QFileSystemModel;
@@ -30,67 +30,67 @@ void MainWindow::createGUI()
     tree->hideColumn(1);           //hidden size "column"
     tree->setColumnWidth(0,200);   //size for "folder tree" column
     tree->setColumnWidth(2,50);    //size for "type" column
-    leftlayout->addWidget(tree);
+    leftLayout->addWidget(tree);
 
     selectionModel= tree->selectionModel();
 
     connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
-            this, SLOT(get_stat()));
+            this, SLOT(getStat()));
 
 
     //create textedit for display statistic information
-    StatDisplay = new QTextEdit;
-    rightlayout->addWidget(StatDisplay);
+    statDisplay = new QTextEdit;
+    rightLayout->addWidget(statDisplay);
 
     //create table and table header
     table = new QTableView;
-    tablemodel = new QStandardItemModel(0,4,this);
-    tablemodel->setHorizontalHeaderItem(0, new QStandardItem(QString("group")));
-    tablemodel->setHorizontalHeaderItem(1, new QStandardItem(QString("count")));
-    tablemodel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
-    tablemodel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
+    tableModel = new QStandardItemModel(0,4,this);
+    tableModel->setHorizontalHeaderItem(0, new QStandardItem(QString("group")));
+    tableModel->setHorizontalHeaderItem(1, new QStandardItem(QString("count")));
+    tableModel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
+    tableModel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
 
-    table->setModel(tablemodel);
-    rightlayout->addWidget(table);
+    table->setModel(tableModel);
+    rightLayout->addWidget(table);
 
     //create process bar label
-    PBlabel = new QLabel("Progress");
-    leftlayout->addWidget(PBlabel);
+    pogressBarLabel = new QLabel("Progress");
+    leftLayout->addWidget(pogressBarLabel);
 
     //create process bar
     progressBar = new QProgressBar();
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
     progressBar->setValue(0);
-    leftlayout->addWidget(progressBar,3,0);
+    leftLayout->addWidget(progressBar,3,0);
 
-    exit_button = new QPushButton ("Exit");
-    connect(exit_button,SIGNAL(clicked(bool)),this,SLOT(close()));
-    rightlayout->addWidget(exit_button);
+    exitButton = new QPushButton ("Exit");
+    connect(exitButton,SIGNAL(clicked(bool)),this,SLOT(close()));
+    rightLayout->addWidget(exitButton);
 
-    mainlayout->addLayout(leftlayout);
-    mainlayout->addLayout(rightlayout);
+    mainLayout->addLayout(leftLayout);
+    mainLayout->addLayout(rightLayout);
 }
 
 
-void MainWindow::get_stat()
+void MainWindow::getStat()
 {
     const QModelIndex index = tree->selectionModel()->currentIndex();
-    QDir dir_path = model->fileInfo(index).absoluteFilePath();
+    QDir dirPath = model->fileInfo(index).absoluteFilePath();
 
     //create and start timer for progress bar
     timer = new QTimer;
-    connect(timer, SIGNAL(timeout()), this, SLOT(TimerEvent()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
     timer->start(1000);
 
     //start it in new thread
-    this->buildStat(dir_path);
+    this->buildStat(dirPath);
 
 }
 
 void MainWindow::addThread(QDir dirPath)
 {
-    wrapper = new newThread(dirPath);
+    wrapper = new Wrapper(dirPath);
     QThread* thread = new QThread;
 
     wrapper->moveToThread(thread);
@@ -116,53 +116,52 @@ void MainWindow::buildStat(QDir dirPath)
 void MainWindow::printStat()
 {
     //cleare table and construct header
-    tablemodel->clear();
-    tablemodel->setHorizontalHeaderItem(0, new QStandardItem(QString("group")));
-    tablemodel->setHorizontalHeaderItem(1, new QStandardItem(QString("count")));
-    tablemodel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
-    tablemodel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
+    tableModel->clear();
+    tableModel->setHorizontalHeaderItem(0, new QStandardItem(QString("group")));
+    tableModel->setHorizontalHeaderItem(1, new QStandardItem(QString("count")));
+    tableModel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
+    tableModel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
 
-    StatDisplay->setText(wrapper->stat->getPath());
-    QString info = "Subdirectories in selected folder: "+ wrapper->stat->getsubdirsCounter();
-    StatDisplay->append(info);
-    info = "Files in selected folder: " + QString::number(wrapper->stat->getfileCounter());
-    StatDisplay->append(info);
-    info = "All files size in selected folder: " + wrapper->stat->fileSize(wrapper->stat->getsizeCounter());
-    StatDisplay->append(info);
+    statDisplay->setText(wrapper->statistic->getPath());
+    QString info = "Subdirectories in selected folder: "+ wrapper->statistic->getSubDirsCounter();
+    statDisplay->append(info);
+    info = "Files in selected folder: " + QString::number(wrapper->statistic->getFileCounter());
+    statDisplay->append(info);
+    info = "All files size in selected folder: " + wrapper->statistic->getFileSize(wrapper->statistic->getSizeCounter());
+    statDisplay->append(info);
 
     //print all extensions size
 
-    QMap<QString,qint64> ::iterator iter = wrapper->stat->sizeStore.begin();
+    QMap<QString,qint64> ::iterator iter = wrapper->statistic->sizeStore_.begin();
     int row = 0;
-    for (;iter != wrapper->stat->sizeStore.end(); ++iter)
+    for (;iter != wrapper->statistic->sizeStore_.end(); ++iter)
     {
 
         QString group = iter.key();
-        QString filesInGroup =  QString::number(wrapper->stat->countStore[iter.key()]);
-        QString groupSize = wrapper->stat->fileSize(iter.value());
-        QString avgSize =wrapper->stat->fileSize(iter.value()/wrapper->stat->countStore[iter.key()]);
+        QString filesInGroup =  QString::number(wrapper->statistic->countStore_[iter.key()]);
+        QString groupSize = wrapper->statistic->getFileSize(iter.value());
+        QString avgSize =wrapper->statistic->getFileSize(iter.value()/wrapper->statistic->countStore_[iter.key()]);
 
-        tablemodel->appendRow(new QStandardItem());  //add new string in table
+        tableModel->appendRow(new QStandardItem());  //add new string in table
 
-        QStandardItem *file_group = new QStandardItem(group);
-        tablemodel->setItem(row,0,file_group);       //add group in table
+        QStandardItem *fileGroup = new QStandardItem(group);
+        tableModel->setItem(row,0,fileGroup);       //add group in table
 
-        QStandardItem *file_count = new QStandardItem(filesInGroup); //add count in table
-        tablemodel->setItem(row,1,file_count);
+        QStandardItem *fileCount = new QStandardItem(filesInGroup); //add count in table
+        tableModel->setItem(row,1,fileCount);
 
+        QStandardItem *groupSizeRow = new QStandardItem(groupSize); //add size of group in table
+        tableModel->setItem(row,2,groupSizeRow);
 
-        QStandardItem *group_size = new QStandardItem(groupSize);
-        tablemodel->setItem(row,2,group_size);
-
-        QStandardItem *avg_size = new QStandardItem(avgSize);
-        tablemodel->setItem(row,3,avg_size);
+        QStandardItem *avgSizeRow = new QStandardItem(avgSize);   //add average size in table
+        tableModel->setItem(row,3,avgSizeRow);
         row++;
     }
 }
 
-void MainWindow::TimerEvent()
+void MainWindow::timerEvent()
 {
-    int cur_pb_value = progressBar->value();
-    if (cur_pb_value < 99)
-        progressBar->setValue(cur_pb_value+1);
+    int curProgressBarvalue = progressBar->value();
+    if (curProgressBarvalue < 99)
+        progressBar->setValue(curProgressBarvalue+1);
 }

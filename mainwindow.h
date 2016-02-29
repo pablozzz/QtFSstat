@@ -14,8 +14,9 @@
 #include <QTableView>
 #include <QStandardItemModel>
 #include <QThread>
-#include "newthread.h"
 #include <QTimer>
+
+#include "wrapper.h"
 
 class MainWindow : public QWidget
 {
@@ -26,9 +27,9 @@ public:
     void buildStat(QDir dirPath);
 
 private slots:
-    void get_stat();                //Create new threat for getting statistics
+    void getStat();                //Create new threat for getting statistics
     void printStat();
-    void TimerEvent();
+    void timerEvent();
 private:
 
     void createGUI();                   //MainWindow GUI constructor
@@ -36,22 +37,22 @@ private:
 
     QLabel *label;
     QLabel *statlabel;
-    QLabel *PBlabel;
+    QLabel *pogressBarLabel;
     QPushButton *button;
-    QPushButton *exit_button;
-    QPushButton *choose_dir;
-    QTextEdit *StatDisplay;
-    QHBoxLayout *mainlayout;
-    QVBoxLayout *leftlayout;
-    QVBoxLayout *rightlayout;
+    QPushButton *exitButton;
+    QPushButton *chooseDir;
+    QTextEdit *statDisplay;
+    QHBoxLayout *mainLayout;
+    QVBoxLayout *leftLayout;
+    QVBoxLayout *rightLayout;
     QFileSystemModel *model;
     QTreeView *tree;
     QTreeWidgetItem *dir;
     QItemSelectionModel *selectionModel;
     QTableView *table;
-    QStandardItemModel *tablemodel;
+    QStandardItemModel *tableModel;
     QProgressBar *progressBar;
-    newThread *wrapper;
+    Wrapper *wrapper;
     QTimer *timer;
 
 };

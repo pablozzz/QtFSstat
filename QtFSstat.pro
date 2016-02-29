@@ -14,12 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    newthread.cpp \
-    statistic.cpp
+    statistic.cpp \
+    wrapper.cpp
 
 HEADERS  += mainwindow.h \
-    newthread.h \
-    statistic.h
+    statistic.h \
+    wrapper.h
 
 
 QMAKE_LFLAGS += -s

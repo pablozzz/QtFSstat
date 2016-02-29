@@ -1,46 +1,46 @@
 #include "statistic.h"
 
-Statistic::Statistic(QDir dirpath)
+Statistic::Statistic(QDir dirPath)
 {
-    fileCounter = 0;
-    sizeCounter = 0;
-    subDirsCouter = 0;
-    dir_path = dirpath;
+    fileCounter_ = 0;
+    sizeCounter_ = 0;
+    subDirsCouter_ = 0;
+    dirPath_ = dirPath;
 
 }
-qint64 Statistic::getfileCounter()
+qint64 Statistic::getFileCounter()
 {
-    return fileCounter;
+    return fileCounter_;
 }
 
-qint64 Statistic::getsizeCounter()
+qint64 Statistic::getSizeCounter()
 {
-    return sizeCounter;
+    return sizeCounter_;
 }
-QString Statistic::getsubdirsCounter()
+QString Statistic::getSubDirsCounter()
 {
 
-    return QString::number(subDirsCouter);
+    return QString::number(subDirsCouter_);
 }
 
 QString Statistic::getPath()
 {
-    return dir_path.path();
+    return dirPath_.path();
 }
 
 
 void Statistic::dirIterator()
 {
     //count subdirs in current directory
-    foreach (QString DirName,dir_path.entryList(QDir::Dirs|QDir::NoDotAndDotDot)) //For exclude "." and ".." subdirectories
-    { 
-        subDirsCouter++;
+    foreach (QString DirName,dirPath_.entryList(QDir::Dirs|QDir::NoDotAndDotDot)) //For exclude "." and ".." subdirectories
+    {
+        subDirsCouter_++;
     }
 
     //get statistic information from cuttent folder and start iterator
-    this->fileFinder(dir_path);
+    this->fileFinder(dirPath_);
     QDir::Filters df = QDir::Dirs|QDir::NoDotAndDotDot|QDir::NoSymLinks; //filter for "." and ".." dirs
-    QDirIterator it(dir_path.path(), df, QDirIterator::Subdirectories);
+    QDirIterator it(dirPath_.path(), df, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         {
             this->fileFinder(it.next());
@@ -48,32 +48,32 @@ void Statistic::dirIterator()
     }
 }
 
-void Statistic::fileFinder(QDir current_dir)
+void Statistic::fileFinder(QDir currentDiir)
 {
-    foreach (QFileInfo fileInfo,current_dir.entryInfoList(QDir::Files|QDir::Hidden|QDir::NoSymLinks))
+    foreach (QFileInfo fileInfo,currentDiir.entryInfoList(QDir::Files|QDir::Hidden|QDir::NoSymLinks))
     {
         qint64 nSize = fileInfo.size();
-        sizeCounter += nSize;
-        fileCounter++;
+        sizeCounter_ += nSize;
+        fileCounter_++;
 
         //add new extinsions and it's sizes in dictionary
         QString ext = fileInfo.completeSuffix();
-        if (sizeStore.contains(ext))             //Only one Qmap obj slowly search
+        if (sizeStore_.contains(ext))             //Only one Qmap obj slowly search
         {
-            sizeStore[ext] += nSize;
-            countStore[ext]++;
+            sizeStore_[ext] += nSize;
+            countStore_[ext]++;
 
         }
         else
         {
-            sizeStore.insert(ext, nSize);
-            countStore.insert(ext, 1);
+            sizeStore_.insert(ext, nSize);
+            countStore_.insert(ext, 1);
         }
     }
 }
 
 
-QString Statistic::fileSize(qint64 nSize)
+QString Statistic::getFileSize(qint64 nSize)
 {
     int i = 0;
     for (;nSize > 1023; nSize/=1024, i++)
