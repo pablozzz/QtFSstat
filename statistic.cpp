@@ -58,22 +58,25 @@ void Statistic::startDirIterator()
     }
 }
 
-void Statistic::computeFdrStat(QDir currentDiir)
+void Statistic::computeFdrStat(QDir currentDir)
 {
     QDir::Filters ff = QDir::Files|QDir::Hidden|QDir::NoSymLinks;
-    foreach (QFileInfo fileInfo,currentDiir.entryInfoList(ff))
+    foreach (QFileInfo fileInfo,currentDir.entryInfoList(ff))
     {
         qint64 nSize = fileInfo.size();
         sizeCounter_ += nSize;
         fileCounter_++;
 
         //add new extinsions and it's sizes in dictionary
-        QString ext = fileInfo.completeSuffix();
+        QString ext = fileInfo.suffix();
+        if (ext.isEmpty()) //check files without extension
+        {
+            ext = "no extension";
+        }
         if (sizeStore_.contains(ext))
         {
             sizeStore_[ext] += nSize;
             countStore_[ext]++;
-
         }
         else
         {
@@ -87,7 +90,7 @@ void Statistic::computeFdrStat(QDir currentDiir)
 QString Statistic::getFileSize(qint64 nSize)
 {
     int i = 0;
-    for (;nSize > 1023; nSize/=1024, i++)
+    for (; nSize > 1023; nSize /= 1024, ++i)
     {
         if(i >= 4)
         {

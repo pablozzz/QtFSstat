@@ -86,7 +86,7 @@ void MainWindow::getStat()
         //create and start timer for progress bar
         timer = new QTimer;
         connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
-        timer->start(1000);
+        timer->start(300);
 
         //start it in new thread
         this->computeStat(dirPath);

@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QFont>
 #include <QFontDatabase>
+#include "startwindow.h"
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -17,9 +18,17 @@ int main(int argc, char *argv[])
         a.setFont(font);
     }
 
-    MainWindow w;
-    w.setMinimumSize(900,500);
-    w.show();
+    StartWindow* startWindow = new StartWindow;
+
+    startWindow->show();
+    startWindow->setMinimumSize(300,100);
+
+    MainWindow mainWindow;
+    mainWindow.setMinimumSize(900,500);
+
+    delete(startWindow);
+    mainWindow.show();
+
 
     return a.exec();
 }
