@@ -23,4 +23,7 @@ HEADERS += mainwindow.h \
 
 
 QMAKE_LFLAGS += -s
-QMAKE_LFLAGS_RELEASE += -static-libgcc
+QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+
+RESOURCES += \
+    fonts.qrc
