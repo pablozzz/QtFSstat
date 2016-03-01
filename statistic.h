@@ -13,13 +13,16 @@ public:
     Statistic(QDir dirPath);
 
     void startDirIterator();                 //Subdirectories runner;
-    void computeFdrStat(QDir currentDir);  //calculated statistic information in current folder
+                        //calculated statistic information in current folder
+    void computeFdrStat(QDir currentDir);
 
-    qint64 getFileCounter();            //return all files count
-    qint64 getSizeCounter();            //reutrn size of all files
-    QString getSubDirsCounter();        //return count of subdirectories only in selected folder
+    qint64 getFileCounter();       //return all files count
+    qint64 getSizeCounter();       //reutrn size of all files
+                      //return count of subdirectories only in selected folder
+    QString getSubDirsCounter();
     QString getPath();                  //return selected folder path
-    QString getFileSize(qint64 nSize);     //Get absolute path and return filesize in bytes,kilobytes,etc.
+                //Get absolute path and return filesize in bytes,kilobytes,etc.
+    QString getFileSize(qint64 nSize);
     QMap<QString,qint64> getCountStore();
     QMap<QString,qint64> getSizeStore();
 

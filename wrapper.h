@@ -1,4 +1,5 @@
-//Special "wrappper" class for create object, which have to work in new thread & create new thread for it.
+//Special "wrappper" class for create object,
+//which have to work in new thread & create new thread for it.
 
 #ifndef WRAPPER_H
 #define WRAPPER_H
@@ -13,7 +14,7 @@ public:
     Wrapper(QDir dirPath_);
     ~Wrapper();
 
-    Statistic *statistic;
+    Statistic* statistic;
 
 private:
     QDir dirPath_;

@@ -34,8 +34,9 @@ void MainWindow::createGUI()
 
     selectionModel= tree->selectionModel();
 
-    connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
-            this, SLOT(getStat()));
+    connect(selectionModel,
+            SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this,SLOT(getStat()));
 
 
     //create textedit for display statistic information
@@ -132,16 +133,17 @@ void MainWindow::printStat()
     tableModel->setHorizontalHeaderItem(2, new QStandardItem(QString("size")));
     tableModel->setHorizontalHeaderItem(3, new QStandardItem(QString("avg size")));
 
-    statDisplay->setText(wrapper->statistic->getPath()); //show selected folder path
+    //show selected folder path
+    statDisplay->setText(wrapper->statistic->getPath());
 
     QString info = "Subdirectories in selected folder: "
             + wrapper->statistic->getSubDirsCounter();
 
     info += "\nFiles in selected folder: "
-            + QString::number(wrapper->statistic->getFileCounter());
+         + QString::number(wrapper->statistic->getFileCounter());
 
     info += "\nAll files size in selected folder: "
-            + wrapper->statistic->getFileSize(wrapper->statistic->getSizeCounter());
+         + wrapper->statistic->getFileSize(wrapper->statistic->getSizeCounter());
 
     statDisplay->append(info);
 
@@ -163,19 +165,19 @@ void MainWindow::printStat()
 
         qint64 avgSizeBytes = iter.value()/countStore[iter.key()];
         QString avgSize = wrapper->statistic->getFileSize(avgSizeBytes);
-
-        tableModel->appendRow(new QStandardItem());  //add new string in table
-
+        //add new string in table
+        tableModel->appendRow(new QStandardItem());
+        //add group in table
         QStandardItem *fileGroup = new QStandardItem(group);
-        tableModel->setItem(row,0,fileGroup);       //add group in table
-
-        QStandardItem *fileCount = new QStandardItem(filesInGroup); //add count in table
+        tableModel->setItem(row,0,fileGroup);
+        //add count in table
+        QStandardItem *fileCount = new QStandardItem(filesInGroup);
         tableModel->setItem(row,1,fileCount);
-
-        QStandardItem *groupSizeRow = new QStandardItem(groupSize); //add size of group in table
+        //add size of group in table
+        QStandardItem *groupSizeRow = new QStandardItem(groupSize);
         tableModel->setItem(row,2,groupSizeRow);
-
-        QStandardItem *avgSizeRow = new QStandardItem(avgSize);   //add average size in table
+        //add average size in table
+        QStandardItem *avgSizeRow = new QStandardItem(avgSize);
         tableModel->setItem(row,3,avgSizeRow);
         row++;
     }

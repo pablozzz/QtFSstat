@@ -5,7 +5,8 @@ Wrapper::Wrapper(QDir dirPath)
 {
     dirPath_ = dirPath;
     pBarValue_ = 0;
-    connect(this,SIGNAL(done()),this,SLOT(progressDone()));  //send 100% value in progress bar on main window
+    //send 100% value in progress bar on main window
+    connect(this,SIGNAL(done()),this,SLOT(progressDone()));
 }
 Wrapper::~Wrapper()
 {

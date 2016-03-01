@@ -27,32 +27,32 @@ public:
     void computeStat(QDir dirPath); //start statistic calculation in new thread
 
 private slots:
-    void getStat();                //Create new threat for getting statistics
-    void printStat();              //Display folder statistic when calculation is completed
+    void getStat();     //Create new threat for getting statistics
+    void printStat();  //Display folder statistic when calculation is completed
     void timerEvent();
 
 private:
     void createGUI();                   //MainWindow GUI constructor
     void addThread(QDir dirPath);       //Iinitialize new thread parametrs
 
-    QLabel *treeWndLabel;
-    QLabel *statLabel;
-    QLabel *pogressBarLabel;
-    QPushButton *exitButton;
-    QPushButton *selectDirButton;
-    QTextEdit *statDisplay;
-    QHBoxLayout *mainLayout;
-    QVBoxLayout *leftLayout;
-    QVBoxLayout *rightLayout;
-    QFileSystemModel *model;
-    QTreeView *tree;
-    QTreeWidgetItem *dir;
-    QItemSelectionModel *selectionModel;
-    QTableView *table;
-    QStandardItemModel *tableModel;
-    QProgressBar *progressBar;
-    Wrapper *wrapper;
-    QTimer *timer;
+    QLabel* treeWndLabel;
+    QLabel* statLabel;
+    QLabel* pogressBarLabel;
+    QPushButton* exitButton;
+    QPushButton* selectDirButton;
+    QTextEdit* statDisplay;
+    QHBoxLayout* mainLayout;
+    QVBoxLayout* leftLayout;
+    QVBoxLayout* rightLayout;
+    QFileSystemModel* model;
+    QTreeView* tree;
+    QTreeWidgetItem* dir;
+    QItemSelectionModel* selectionModel;
+    QTableView* table;
+    QStandardItemModel* tableModel;
+    QProgressBar* progressBar;
+    Wrapper* wrapper;
+    QTimer* timer;
 
 };
 
