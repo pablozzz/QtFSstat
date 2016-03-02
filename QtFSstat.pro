@@ -15,17 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            statistic.cpp \
-           wrapper.cpp \
-    startwindow.cpp
+           wrapper.cpp
 
 HEADERS += mainwindow.h \
            statistic.h \
-           wrapper.h \
-    startwindow.h
+           wrapper.h
 
 
 QMAKE_LFLAGS += -s
 QMAKE_LFLAGS_RELEASE += -static-libgcc
 
 RESOURCES += \
-    fonts.qrc
+    fonts.qrc \
+    images.qrc

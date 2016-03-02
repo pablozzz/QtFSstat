@@ -15,6 +15,7 @@
 #include <QStandardItemModel>
 #include <QThread>
 #include <QTimer>
+#include <QDesktopWidget>
 
 #include "wrapper.h"
 
@@ -25,7 +26,7 @@ class MainWindow : public QWidget
 public:
     MainWindow();
     void computeStat(QDir dirPath); //start statistic calculation in new thread
-
+    void moveToCenter(); //move this widget in screen centre
 private slots:
     void getStat();     //Create new threat for getting statistics
     void printStat();  //Display folder statistic when calculation is completed
@@ -33,8 +34,7 @@ private slots:
 
 private:
     void createGUI();                   //MainWindow GUI constructor
-    void addThread(QDir dirPath);       //Iinitialize new thread parametrs
-
+    void addThread(QDir dirPath);       //Iinitialize new thread parametrs  
     QLabel* treeWndLabel;
     QLabel* statLabel;
     QLabel* pogressBarLabel;

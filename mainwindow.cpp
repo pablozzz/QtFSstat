@@ -3,9 +3,8 @@
 
 MainWindow::MainWindow()
 {
-    createGUI();
-    setLayout(mainLayout);
     setWindowTitle("File System Statistics");
+    createGUI();
 }
 
 
@@ -71,6 +70,8 @@ void MainWindow::createGUI()
 
     mainLayout->addLayout(leftLayout);
     mainLayout->addLayout(rightLayout);
+
+    setLayout(mainLayout);
 }
 
 
@@ -188,4 +189,12 @@ void MainWindow::timerEvent()
     int curPbval = progressBar->value();
     if (curPbval < 99)
         progressBar->setValue(curPbval+1);
+}
+
+
+void MainWindow::moveToCenter()
+{
+    QRect frect = frameGeometry();
+    frect.moveCenter(QDesktopWidget().availableGeometry().center());
+    move(frect.topLeft());
 }
